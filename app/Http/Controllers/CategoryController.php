@@ -9,12 +9,12 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a indexing of the resource.
      */
-    public function list(): View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application
+    public function index(): View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application
     {
         $categories = Category::all();
-        return view('category.list', compact('categories'));
+        return view('categoryCreate', compact('categories'));
     }
 
     /**
@@ -22,7 +22,8 @@ class CategoryController extends Controller
      */
     public function create(): View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application
     {
-        return view('category.create', compact('categories'));
+        $categories = new Category();
+        return view('categories.create', compact('categories'));
     }
 
     /**
@@ -32,15 +33,13 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string|max:500',
         ]);
 
         Category::query()->create([
             'name'=> $request['name'],
-            'description'=> $request['description'],
         ]);
 
-        return redirect()->route('category.list');
+        return redirect()->route('categories.create');
     }
 
     /**
@@ -58,7 +57,7 @@ class CategoryController extends Controller
     {
         $category = Category::query()->findOrFail($id);
 
-        return view('category.edit', compact('category'));
+        return view('categories.edit', compact('category'));
     }
 
     /**
@@ -77,7 +76,7 @@ class CategoryController extends Controller
             'description'=> $request['description'],
         ]);
 
-        return redirect()->route('category.list');
+        return redirect()->route('categories.index');
     }
 
     /**
@@ -88,6 +87,6 @@ class CategoryController extends Controller
         $category = Category::query()->findOrFail($id);
         $category->delete();
 
-        return redirect()->route('category.list');
+        return redirect()->route('categories.index');
     }
 }

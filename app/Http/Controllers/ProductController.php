@@ -11,32 +11,36 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function list(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application
+    public function index(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application
     {
         $products = Product::all();
-        return view('product.list', compact('products'));
+        $categories = Category::all();
+
+        return view('productList', [
+            'products' => $products,
+            'categories' => $categories,
+        ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application
+    public function create()
     {
         $categories = Category::all();
-        return view('product.create', compact('categories'));
+        return view('productCreate', ['categories' => $categories]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): \Illuminate\Http\RedirectResponse
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'price' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:1',
             'quantity' => 'required|integer|min:1',
-            'description' => 'nullable|string|max:1000',
         ]);
 
         Product::query()->create([
@@ -44,11 +48,10 @@ class ProductController extends Controller
             'category_id' => $validated['category_id'],
             'price' => $validated['price'],
             'quantity' => $validated['quantity'],
-            'description' => $validated['description'] ?? null,
+            'total_price' => $validated['price'] * $validated['quantity'],
         ]);
 
-        return redirect()->route('products.index')->with('success', 'Product created successfully!');
-
+        return redirect()->route('products.create')->with('success', 'Product created successfully!');
     }
 
     /**
@@ -65,7 +68,10 @@ class ProductController extends Controller
     public function edit(Product $product): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application
     {
         $categories = Category::all();
-        return view('product.edit', compact('product', 'categories'));
+        return view('productCreate', [
+            'product' => $product,
+            'categories' => $categories,
+        ]);
     }
 
     /**
@@ -76,9 +82,8 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'price' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:1',
             'quantity' => 'required|integer|min:1',
-            'description' => 'nullable|string|max:1000',
         ]);
 
         $product->update([
@@ -86,7 +91,7 @@ class ProductController extends Controller
             'category_id' => $validated['category_id'],
             'price' => $validated['price'],
             'quantity' => $validated['quantity'],
-            'description' => $validated['description'] ?? null,
+            'total_price' => $validated['price'] * $validated['quantity'],
         ]);
 
         return redirect()->route('products.index')->with('success', 'Product updated successfully!');
