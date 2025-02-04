@@ -16,9 +16,15 @@
             </a>
             <ul id="category-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
+                    <a class="nav-link" href="{{ route('categories.create') }}">
+                        <i class="bi bi-circle">
+                        </i><span>Add Category</span>
+                    </a>
+                </li>
+                <li>
                     <a class="nav-link" href="{{ route('categories.index') }}">
                         <i class="bi bi-circle">
-                        </i><span>Category</span>
+                        </i><span>Categories List</span>
                     </a>
                 </li>
             </ul>

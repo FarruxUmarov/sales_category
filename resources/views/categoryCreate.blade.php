@@ -15,7 +15,9 @@
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
 
     <!-- Vendor CSS Files -->
     <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -51,43 +53,46 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item active">Category</li>
+                <li class="breadcrumb-item">Tables</li>
+                <li class="breadcrumb-item active"><a href="{{ route('categories.index') }}">List Category</a></li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
 
     <section class="section">
         <div class="row">
-            <div class="center" >
+            <div class="center">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Add Category</h5>
-
                         <!-- General Form Elements -->
-                        <form method="POST" action="{{ route('categories.store') }}">
+                        <form method="POST"
+                              action="{{ isset($category) ? route('categories.update', $category->id) : route('categories.store') }}">
+                            @csrf
+                            @if (isset($category))
+                                @method('PUT')
+                            @endif
                             <div class="row mb-3">
                                 <label for="inputText" class="col-sm-2 col-form-label">Name</label>
                                 <div class="col-sm-5">
-                                    <input type="text" name="name" class="form-control" required>
+                                    <input type="text" name="name" class="form-control" value="{{old('name', isset($category) ? $category->name: '') }}" required>
                                 </div>
                             </div>
                             <div class="row mt-5  mb-3">
                                 <div class="col-sm-10">
-                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    <button type="submit" class="btn btn-primary">{{ isset($category) ? 'Update' : 'Save' }}</button>
                                 </div>
                             </div>
-
                         </form><!-- End General Form Elements -->
-
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
 </main><!-- End #main -->
 
 @include('components.footer')
+@include('components.scripts')
 
 
 </body>

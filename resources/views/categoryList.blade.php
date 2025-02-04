@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Product Tables - NiceAdmin Bootstrap Template</title>
+    <title>Category Tables - NiceAdmin Bootstrap Template</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -26,12 +26,12 @@
 <main id="main" class="main">
 
     <div class="pagetitle">
-        <h1>Product Tables</h1>
+        <h1>Category Tables</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
                 <li class="breadcrumb-item">Tables</li>
-                <li class="breadcrumb-item active"><a href="{{ route('products.create') }}">Product Add</a></li>
+                <li class="breadcrumb-item active"><a href="{{ route('categories.create') }}">Category Add</a></li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -41,7 +41,7 @@
             <div class="center">
                 <div class="card">
                     <div class="card-body" style="margin: 5px 40px">
-                        <h5 class="card-title">List Product</h5>
+                        <h5 class="card-title">List Category</h5>
 
                         <!-- Table with stripped rows -->
                         <table class="table table-striped">
@@ -49,24 +49,16 @@
                             <tr>
                                 <th scope="col">ID</th>
                                 <th scope="col">Name</th>
-                                <th scope="col">Quantity</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Category</th>
-                                <th scope="col">Total Price</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($products as $product)
+                            @foreach($categories as $category)
                                 <tr>
-                                    <td>{{$product->id}}</td>
-                                    <td>{{$product->name}}</td>
-                                    <td>{{$product->quantity}}</td>
-                                    <td>{{$product->price}}</td>
-                                    <td>{{$product->category->name}}</td>
-                                    <td>{{$product->total_price}}</td>
+                                    <td>{{$category->id}}</td>
+                                    <td>{{$category->name}}</td>
                                     <!-- Update Button -->
                                     <td>
-                                        <form action="{{ route('products.edit', $product->id) }}" method="GET">
+                                        <form action="{{ route('categories.edit', $category->id) }}" method="GET">
                                             <button type="submit" class="btn btn-warning mb-2">
                                                 Update <span class="badge bg-white text-warning"></span>
                                             </button>
@@ -74,7 +66,7 @@
                                     </td>
                                     <!-- Delete Button -->
                                     <td>
-                                        <form action="{{ route('products.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                        <form action="{{ route('categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this category?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger mb-2">Delete

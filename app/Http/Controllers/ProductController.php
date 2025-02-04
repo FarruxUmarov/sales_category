@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryRequest;
+use App\Http\Requests\ProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -34,22 +36,17 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'price' => 'required|numeric|min:1',
-            'quantity' => 'required|integer|min:1',
-        ]);
-
+        if ($request->validated()) {
         Product::query()->create([
-            'name' => $validated['name'],
-            'category_id' => $validated['category_id'],
-            'price' => $validated['price'],
-            'quantity' => $validated['quantity'],
-            'total_price' => $validated['price'] * $validated['quantity'],
+            'name' => $request->get('name'),
+            'category_id' => $request->get('category_id'),
+            'price' => $request->get('price'),
+            'quantity' => $request->get('quantity'),
+            'total_price' => $request->get('price') * $request->get('quantity'),
         ]);
+        }
 
         return redirect()->route('products.create')->with('success', 'Product created successfully!');
     }
@@ -77,21 +74,15 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product): \Illuminate\Http\RedirectResponse
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'price' => 'required|numeric|min:1',
-            'quantity' => 'required|integer|min:1',
-        ]);
 
-        $product->update([
-            'name' => $validated['name'],
-            'category_id' => $validated['category_id'],
-            'price' => $validated['price'],
-            'quantity' => $validated['quantity'],
-            'total_price' => $validated['price'] * $validated['quantity'],
+    public function update(CategoryRequest $request, string $id): \Illuminate\Http\RedirectResponse
+    {
+        Product::query()->FindOrFail($id)->update([
+            'name' => $request->get('name'),
+            'category_id' => $request->get('category_id'),
+            'price' => $request->get('price'),
+            'quantity' => $request->get('quantity'),
+            'total_price' => $request->get('price') * $request->get('quantity'),
         ]);
 
         return redirect()->route('products.index')->with('success', 'Product updated successfully!');
